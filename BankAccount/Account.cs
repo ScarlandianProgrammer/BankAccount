@@ -51,10 +51,17 @@ namespace BankAccount
         /// Takes out the specified amount from the account
         /// </summary>
         /// <param name="amount">The positive amount of money to be taken out of the account</param>
-        /// <exception cref="NotImplementedException"></exception>
-        public void Withdraw(double amount)
+        /// <returns>The new account balance after the withdrawx</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Throws an exception
+        /// if the amount is equal to or less than 0</exception>
+        public double Withdraw(double amount)
         {
-            throw new NotImplementedException();
+            if (amount <= 0) 
+            {
+                throw new ArgumentOutOfRangeException($"The {nameof(amount)} must be more than 0");
+            }
+            Balance -= amount;
+            return Balance;
         }
     }
 }
