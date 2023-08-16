@@ -33,10 +33,16 @@ namespace BankAccount
         /// <summary>
         /// Adds the specified amount of money to the balance, and returns the new balance
         /// </summary>
-        /// <returns>The new account balance after the deposit</returns>
         /// <param name="amount">The positive amount to be added to the account</param>
+        /// <returns>The new account balance after the deposit</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Throws an exception if
+        /// the amount is equal to or less than 0.</exception>
         public double Deposit(double amount) 
         {
+            if (amount <= 0)
+            {
+                throw new ArgumentOutOfRangeException($"The {nameof(amount)} must be more than 0");
+            }
             Balance += amount;
             return Balance;
         }
