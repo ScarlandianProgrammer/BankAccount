@@ -33,10 +33,13 @@ namespace BankAccount.Tests
         }
 
         [TestMethod]
-        public void Deposit_APositiveAmount_ReturnsUpdatedBalance()
+        [DataRow(100)]
+        [DataRow(.01)]
+        [DataRow(999999.99)]
+        [DataRow(345.67)]
+        public void Deposit_APositiveAmount_ReturnsUpdatedBalance(double depositAmount)
         {
-            double depositAmount = 100;
-            double expectedReturn = 100;
+            double expectedReturn = depositAmount;
 
             // Act
             double returnAmount = account.Deposit(depositAmount);
@@ -53,6 +56,53 @@ namespace BankAccount.Tests
             // Act & Assert
             Assert.ThrowsException<ArgumentOutOfRangeException>(
                 () => account.Deposit(invalidDepositAmount));
+        }
+
+        [TestMethod]
+        [DataRow(100)]
+        [DataRow(.01)]
+        [DataRow(999999.99)]
+        [DataRow(345.67)]
+        public void Withdraw_APositiveAmount_TakeOutOfBalance(double validWithdrawAmount) 
+        {
+            // adding funds to the balance so that it can be taken away
+            account.Deposit(validWithdrawAmount);
+
+            // Act
+            account.Withdraw(validWithdrawAmount);
+
+            // Assert
+            Assert.AreEqual(0, account.Balance);
+        }
+
+        [TestMethod]
+        [DataRow(100)]
+        [DataRow(.01)]
+        [DataRow(999999.99)]
+        [DataRow(345.67)]
+        public void Withdraw_APositiveNumber_ReturnUpdatedBalance(double validWithdrawAmount)
+        {
+            account.Deposit(1000000.0);
+            double expectedUpdatedBalance = account.Balance - validWithdrawAmount;
+
+            // Act
+            account.Withdraw(validWithdrawAmount);
+
+            // Assert
+            Assert.AreEqual(expectedUpdatedBalance, account.Balance);
+        }
+
+        [TestMethod]
+        [DataRow(-100)]
+        [DataRow(-.01)]
+        [DataRow(-999999.99)]
+        [DataRow(-345.67)]
+        [DataRow(0)]
+        public void Withdraw_ANegativeNumber_ThrowsArgumentException(double invalidWithdrawAmount)
+        {
+            account.Deposit(1000000.0);
+
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => account.Withdraw(invalidWithdrawAmount));
         }
     }
 }
